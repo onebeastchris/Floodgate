@@ -11,6 +11,15 @@ repositories {
     maven("https://maven.architectury.dev/")
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<JavaCompile> {
+    options.release.set(17)
+}
+
 dependencies {
     implementation(libs.indra.common)
     implementation(libs.indra.git)

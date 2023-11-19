@@ -1,4 +1,4 @@
-package org.geysermc.floodgate.mod.mixin;
+package org.geysermc.floodgate.fabric.mixin;
 
 
 import net.minecraft.network.protocol.handshake.ClientIntentionPacket;

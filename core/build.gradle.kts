@@ -39,6 +39,15 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<JavaCompile> {
+    options.release.set(17)
+}
+
 // present on all platforms
 provided(libs.netty.transport)
 provided(libs.netty.codec)

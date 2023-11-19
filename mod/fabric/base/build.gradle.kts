@@ -11,18 +11,27 @@ loom {
     accessWidenerPath.set(project(":mod:common-base").file("src/main/resources/floodgate.accesswidener"))
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<JavaCompile> {
+    options.release.set(17)
+}
+
 dependencies {
     api(projects.mod.commonBase)
 
     modApi(libs.fabric.api)
-    modImplementation(libs.fabric.loader)
+    implementation(libs.fabric.loader)
 
     // Commands library implementation for Fabric
-    modImplementation(libs.cloud.fabric) {
+    modImplementation("cloud.commandframework:cloud-fabric:1.8.4") {
         because("Commands library implementation for Fabric")
     }
 
-    modImplementation(libs.kyori.adventure) {
+    modImplementation("net.kyori:adventure-platform-fabric:5.10.0") {
         because("Chat library implementation for Fabric that includes methods for communicating with the server")
         // Thanks to zml for this fix
         // The package modifies Brigadier which causes a LinkageError at runtime if included

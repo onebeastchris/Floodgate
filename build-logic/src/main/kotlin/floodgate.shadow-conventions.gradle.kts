@@ -32,7 +32,7 @@ tasks {
             addRelocations(project, sJar)
         }
 
-        val destinationDir = System.getenv("DESTINATION_DIRECTORY");
+        val destinationDir = System.getenv("DESTINATION_DIRECTORY")
         if (destinationDir != null) {
             destinationDirectory.set(file(destinationDir))
         }

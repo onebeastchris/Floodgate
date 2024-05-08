@@ -26,11 +26,12 @@
 package org.geysermc.floodgate.database.config;
 
 import lombok.Getter;
+import org.geysermc.floodgate.core.database.config.DatabaseConfig;
 
 @Getter
 public class MysqlConfig implements DatabaseConfig {
-  private String hostname = "localhost";
-  private String database = "floodgate";
-  private String username = "floodgate";
+  private final String hostname = "localhost";
+  private final String database = "floodgate";
+  private final String username = "floodgate";
   private String password;
 }

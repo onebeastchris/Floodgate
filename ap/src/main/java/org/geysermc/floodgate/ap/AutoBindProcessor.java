@@ -33,6 +33,6 @@ import javax.lang.model.SourceVersion;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AutoBindProcessor extends ClassProcessor {
     public AutoBindProcessor() {
-        super("org.geysermc.floodgate.util.AutoBind");
+        super("org.geysermc.floodgate.core.util.AutoBind");
     }
 }

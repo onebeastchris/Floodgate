@@ -76,6 +76,8 @@ public abstract class CommonDataHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
+        System.out.println("got floodgate data: " + separation.floodgateData());
+
         if (separation.headerVersion() != FloodgateCipher.VERSION) {
             disablePacketQueue(true);
             setKickMessage(String.format(

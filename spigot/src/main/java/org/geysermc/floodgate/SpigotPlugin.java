@@ -60,6 +60,7 @@ public final class SpigotPlugin extends JavaPlugin {
         long endCtm = System.currentTimeMillis();
         injector.getInstance(FloodgateLogger.class)
                 .translatedInfo("floodgate.core.finish", endCtm - ctm);
+        injector.getInstance(FloodgateLogger.class).info("Thanks for using this Floodgate debug build!");
     }
 
     @Override

@@ -62,6 +62,7 @@ public final class SpigotDataHandler extends CommonDataHandler {
 
     @Override
     protected void setNewIp(Channel channel, InetSocketAddress newIp) {
+        System.out.println("Setting new ip: " + newIp);
         setValue(networkManager, ClassNames.SOCKET_ADDRESS, newIp);
     }
 
@@ -132,6 +133,7 @@ public final class SpigotDataHandler extends CommonDataHandler {
     @Override
     public boolean channelRead(Object packet) throws Exception {
         if (ClassNames.HANDSHAKE_PACKET.isInstance(packet)) {
+            System.out.println("Handshake packet received");
             // ProtocolSupport would break if we added this during the creation of this handler
             ctx.pipeline().addAfter("splitter", "floodgate_packet_blocker", blocker);
 
@@ -146,7 +148,9 @@ public final class SpigotDataHandler extends CommonDataHandler {
     }
 
     private boolean checkAndHandleLogin(Object packet) throws Exception {
+        System.out.println("checking: " + packet.getClass().getSimpleName());
         if (ClassNames.LOGIN_START_PACKET.isInstance(packet)) {
+            System.out.println("Login start packet received");
             Object packetListener = ClassNames.PACKET_LISTENER.get(networkManager);
 
             String kickMessage = getKickMessage();
@@ -157,6 +161,7 @@ public final class SpigotDataHandler extends CommonDataHandler {
 
             // check if the server is actually in the Login state
             if (!ClassNames.LOGIN_LISTENER.isInstance(packetListener)) {
+                System.out.println("Not in login state! " + player.getCorrectUsername());
                 // player is not in the login state, abort
 
                 // I would've liked to close the channel for security reasons, but our big friend
@@ -164,6 +169,7 @@ public final class SpigotDataHandler extends CommonDataHandler {
                 ctx.pipeline().remove(this);
                 return true;
             }
+            System.out.println("we are in login state for " + player.getCorrectUsername());
 
             if (ClassNames.PAPER_DISABLE_USERNAME_VALIDATION != null) {
                 // ensure that Paper will not be checking

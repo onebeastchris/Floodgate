@@ -102,7 +102,7 @@ public final class SpigotPlatformModule extends AbstractModule {
     @Provides
     @Named("packetEncoder")
     public String packetEncoder() {
-        return "encoder";
+        return "outbound_config";
     }
 
     @Provides

@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.core.packet;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -42,8 +22,10 @@ import org.geysermc.floodgate.core.api.packet.PacketHandlers;
 @Singleton
 public final class PacketHandlersImpl implements PacketHandlers<ChannelHandlerContext> {
     private final Map<PacketHandler<ChannelHandlerContext>, List<HandlerEntry>> handlers = new HashMap<>();
-    private final Set<TriFunction<ChannelHandlerContext, Object, Boolean, Object>> globalPacketHandlers = new HashSet<>();
-    private final Map<Class<?>, Set<TriFunction<ChannelHandlerContext, Object, Boolean, Object>>> packetHandlers = new HashMap<>();
+    private final Set<TriFunction<ChannelHandlerContext, Object, Boolean, Object>> globalPacketHandlers =
+            new HashSet<>();
+    private final Map<Class<?>, Set<TriFunction<ChannelHandlerContext, Object, Boolean, Object>>> packetHandlers =
+            new HashMap<>();
 
     @Override
     public void register(
@@ -55,10 +37,10 @@ public final class PacketHandlersImpl implements PacketHandlers<ChannelHandlerCo
             return;
         }
 
-        handlers.computeIfAbsent(handler, $ -> new ArrayList<>())
-                .add(new HandlerEntry(packetClass, consumer));
+        handlers.computeIfAbsent(handler, $ -> new ArrayList<>()).add(new HandlerEntry(packetClass, consumer));
 
-        packetHandlers.computeIfAbsent(packetClass, $ -> new HashSet<>(globalPacketHandlers))
+        packetHandlers
+                .computeIfAbsent(packetClass, $ -> new HashSet<>(globalPacketHandlers))
                 .add(consumer);
     }
 
@@ -70,8 +52,7 @@ public final class PacketHandlersImpl implements PacketHandlers<ChannelHandlerCo
 
         TriFunction<ChannelHandlerContext, Object, Boolean, Object> packetHandler = handler::handle;
 
-        handlers.computeIfAbsent(handler, $ -> new ArrayList<>())
-                .add(new HandlerEntry(null, packetHandler));
+        handlers.computeIfAbsent(handler, $ -> new ArrayList<>()).add(new HandlerEntry(null, packetHandler));
 
         globalPacketHandlers.add(packetHandler);
         for (Set<TriFunction<ChannelHandlerContext, Object, Boolean, Object>> handle : packetHandlers.values()) {
@@ -102,8 +83,7 @@ public final class PacketHandlersImpl implements PacketHandlers<ChannelHandlerCo
         }
     }
 
-    public Collection<TriFunction<ChannelHandlerContext, Object, Boolean, Object>> getPacketHandlers(
-            Class<?> packet) {
+    public Collection<TriFunction<ChannelHandlerContext, Object, Boolean, Object>> getPacketHandlers(Class<?> packet) {
         return packetHandlers.getOrDefault(packet, Collections.emptySet());
     }
 
@@ -111,6 +91,5 @@ public final class PacketHandlersImpl implements PacketHandlers<ChannelHandlerCo
         return !handlers.isEmpty();
     }
 
-    private record HandlerEntry(Class<?> packet, TriFunction<ChannelHandlerContext, Object, Boolean, Object> handler) {
-    }
+    private record HandlerEntry(Class<?> packet, TriFunction<ChannelHandlerContext, Object, Boolean, Object> handler) {}
 }

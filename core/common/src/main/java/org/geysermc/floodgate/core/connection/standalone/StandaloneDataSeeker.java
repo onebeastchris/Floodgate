@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.connection.standalone;
 
 import jakarta.inject.Inject;
@@ -9,7 +14,8 @@ import org.geysermc.floodgate.core.crypto.FloodgateFormatCodec;
 
 @Singleton
 public final class StandaloneDataSeeker implements DataSeeker {
-    @Inject FloodgateDataHandler dataHandler;
+    @Inject
+    FloodgateDataHandler dataHandler;
 
     @Override
     public DataSeekerResult seekData(String hostname, Object ignored) {

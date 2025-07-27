@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.http;
 
 import jakarta.inject.Inject;
@@ -13,8 +18,11 @@ import org.geysermc.floodgate.core.util.Utils;
 
 @Singleton
 public final class ProfileFetcher {
-    @Inject MinecraftClient minecraftClient;
-    @Inject XboxClient xboxClient;
+    @Inject
+    MinecraftClient minecraftClient;
+
+    @Inject
+    XboxClient xboxClient;
 
     public CompletableFuture<@Nullable ProfileAudience> fetchUniqueIdFor(String username) {
         return minecraftClient.profileByName(username).thenApply(this::convert);

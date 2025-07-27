@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.command.linkedaccounts;
 
 import static org.geysermc.floodgate.core.platform.command.Placeholder.literal;
@@ -25,13 +30,25 @@ import org.incendo.cloud.context.CommandContext;
 
 @Singleton
 final class RemoveLinkedAccountCommand extends FloodgateSubCommand {
-    @Inject Optional<LocalPlayerLinking> optionalLinking;
-    @Inject FloodgateConfig config;
-    @Inject ProfileFetcher fetcher;
-    @Inject FloodgateLogger logger;
+    @Inject
+    Optional<LocalPlayerLinking> optionalLinking;
+
+    @Inject
+    FloodgateConfig config;
+
+    @Inject
+    ProfileFetcher fetcher;
+
+    @Inject
+    FloodgateLogger logger;
 
     RemoveLinkedAccountCommand() {
-        super(LinkedAccountsCommand.class, "remove", "Manually remove a locally linked account", Permission.COMMAND_LINKED_MANAGE, "r");
+        super(
+                LinkedAccountsCommand.class,
+                "remove",
+                "Manually remove a locally linked account",
+                Permission.COMMAND_LINKED_MANAGE,
+                "r");
     }
 
     @Override
@@ -59,7 +76,8 @@ final class RemoveLinkedAccountCommand extends FloodgateSubCommand {
         var future = CompletableFuture.completedFuture(playerInput);
         if (playerInput.uuid() == null) {
             if (playerInput.username().startsWith(config.usernamePrefix())) {
-                future = fetcher.fetchXuidFor(playerInput.username().substring(config.usernamePrefix().length()));
+                future = fetcher.fetchXuidFor(
+                        playerInput.username().substring(config.usernamePrefix().length()));
                 bedrock = true;
             } else {
                 bedrock = false;
@@ -100,6 +118,7 @@ final class RemoveLinkedAccountCommand extends FloodgateSubCommand {
     }
 
     public static final class Message {
-        public static final TranslatableMessage REMOVE_SUCCESS = new TranslatableMessage("floodgate.command.linkedaccounts.remove.success", MessageType.SUCCESS);
+        public static final TranslatableMessage REMOVE_SUCCESS =
+                new TranslatableMessage("floodgate.command.linkedaccounts.remove.success", MessageType.SUCCESS);
     }
 }

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.spigot.util;
 
 import java.lang.reflect.Field;
@@ -74,7 +79,8 @@ public class MappingUtils {
         String legacyPrefix = null;
         try {
             legacyPrefix = "net.minecraft.server." + craftbukkitPackage.split("\\.")[3];
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         LEGACY_MAPPING_PREFIX = legacyPrefix;
     }
 }

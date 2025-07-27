@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.bungee.inject;
 
 import io.netty.channel.Channel;
@@ -48,20 +28,21 @@ import org.geysermc.floodgate.core.util.ReflectionUtils;
 public final class BungeeInjector extends Netty4PlatformInjector {
     private static final String BUNGEE_INIT = "floodgate-bungee-init";
 
-    @Inject FloodgateLogger logger;
-    @Getter private boolean injected;
+    @Inject
+    FloodgateLogger logger;
+
+    @Getter
+    private boolean injected;
 
     @Override
     public void inject() {
         // Can everyone just switch to Velocity please :)
 
         // Newer Bungee versions have a separate prepender for backend and client connections
-        Field serverFramePrepender =
-                ReflectionUtils.getField(PipelineUtils.class, "serverFramePrepender");
+        Field serverFramePrepender = ReflectionUtils.getField(PipelineUtils.class, "serverFramePrepender");
         if (serverFramePrepender != null) {
-            BungeeCustomServerPrepender customServerPrepender = new BungeeCustomServerPrepender(
-                    this, ReflectionUtils.castedStaticValue(serverFramePrepender)
-            );
+            BungeeCustomServerPrepender customServerPrepender =
+                    new BungeeCustomServerPrepender(this, ReflectionUtils.castedStaticValue(serverFramePrepender));
             BungeeReflectionUtils.setFieldValue(null, serverFramePrepender, customServerPrepender);
         }
 
@@ -70,9 +51,8 @@ public final class BungeeInjector extends Netty4PlatformInjector {
         // Required in order to inject into both Geyser <-> proxy AND proxy <-> server
         // (Instead of just replacing the ChannelInitializer which is only called for
         // player <-> proxy)
-        BungeeCustomPrepender customPrepender = new BungeeCustomPrepender(
-                this, ReflectionUtils.castedStaticValue(framePrepender)
-        );
+        BungeeCustomPrepender customPrepender =
+                new BungeeCustomPrepender(this, ReflectionUtils.castedStaticValue(framePrepender));
 
         BungeeReflectionUtils.setFieldValue(null, framePrepender, customPrepender);
 
@@ -86,8 +66,7 @@ public final class BungeeInjector extends Netty4PlatformInjector {
 
     @Override
     public void removeInjection() {
-        throw new IllegalStateException(
-                "Floodgate cannot remove itself from Bungee without a reboot");
+        throw new IllegalStateException("Floodgate cannot remove itself from Bungee without a reboot");
     }
 
     void injectClient(Channel channel, boolean clientToProxy) {
@@ -98,8 +77,7 @@ public final class BungeeInjector extends Netty4PlatformInjector {
         if (channel.pipeline().get(MinecraftEncoder.class) == null) {
             logger.debug(
                     "Minecraft encoder not found while injecting! {}",
-                    String.join(", ", channel.pipeline().names())
-            );
+                    String.join(", ", channel.pipeline().names()));
             return;
         }
 
@@ -119,22 +97,20 @@ public final class BungeeInjector extends Netty4PlatformInjector {
 
             if (ctx.channel().parent() != null) {
                 // Client <-> Proxy
-                ctx.pipeline().addBefore(
-                        PipelineUtils.FRAME_DECODER, BUNGEE_INIT,
-                        new BungeeClientToProxyInjectInitializer(injector)
-                );
+                ctx.pipeline()
+                        .addBefore(
+                                PipelineUtils.FRAME_DECODER,
+                                BUNGEE_INIT,
+                                new BungeeClientToProxyInjectInitializer(injector));
             } else {
                 // Proxy <-> Server
-                ctx.pipeline().addLast(
-                        BUNGEE_INIT, new BungeeProxyToServerInjectInitializer(injector)
-                );
+                ctx.pipeline().addLast(BUNGEE_INIT, new BungeeProxyToServerInjectInitializer(injector));
             }
         }
     }
 
     @RequiredArgsConstructor
-    private static final class BungeeCustomServerPrepender
-            extends Varint21LengthFieldExtraBufPrepender {
+    private static final class BungeeCustomServerPrepender extends Varint21LengthFieldExtraBufPrepender {
         private final BungeeInjector injector;
         private final Varint21LengthFieldExtraBufPrepender original;
 
@@ -149,8 +125,7 @@ public final class BungeeInjector extends Netty4PlatformInjector {
     }
 
     @RequiredArgsConstructor
-    private static final class BungeeClientToProxyInjectInitializer
-            extends ChannelInboundHandlerAdapter {
+    private static final class BungeeClientToProxyInjectInitializer extends ChannelInboundHandlerAdapter {
 
         private final BungeeInjector injector;
 
@@ -164,14 +139,12 @@ public final class BungeeInjector extends Netty4PlatformInjector {
     }
 
     @RequiredArgsConstructor
-    private static final class BungeeProxyToServerInjectInitializer
-            extends ChannelOutboundHandlerAdapter {
+    private static final class BungeeProxyToServerInjectInitializer extends ChannelOutboundHandlerAdapter {
 
         private final BungeeInjector injector;
 
         @Override
-        public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)
-                throws Exception {
+        public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
             injector.injectClient(ctx.channel(), false);
 
             ctx.pipeline().remove(this);

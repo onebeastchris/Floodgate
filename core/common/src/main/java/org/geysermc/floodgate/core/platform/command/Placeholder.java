@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.platform.command;
 
 import java.util.Objects;
@@ -16,7 +21,8 @@ public record Placeholder(@TagPattern String key, Tag tag) {
     }
 
     public static Placeholder dynamic(@TagPattern String key, TranslatableMessage message, UserAudience audience) {
-        return dynamic(key, audience.commandUtil().languageManager().rawTranslation(message.toString(), audience.locale()));
+        return dynamic(
+                key, audience.commandUtil().languageManager().rawTranslation(message.toString(), audience.locale()));
     }
 
     public static Placeholder literal(@TagPattern String key, String value) {

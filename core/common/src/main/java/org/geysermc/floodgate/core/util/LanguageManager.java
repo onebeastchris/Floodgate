@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.core.util;
 
 import jakarta.inject.Inject;
@@ -52,12 +32,14 @@ import org.geysermc.floodgate.core.platform.command.Placeholder;
 public final class LanguageManager {
     private final Map<String, Properties> localeMappings = new HashMap<>();
 
-    @Inject FloodgateLogger logger;
+    @Inject
+    FloodgateLogger logger;
 
     /**
      * The locale used in console and as a fallback
      */
-    @Getter String defaultLocale;
+    @Getter
+    String defaultLocale;
 
     /**
      * Cleans up and formats a locale string
@@ -118,8 +100,7 @@ public final class LanguageManager {
             return true;
         }
 
-        Properties properties =
-                Utils.readProperties("languages/texts/" + formatLocale + ".properties");
+        Properties properties = Utils.readProperties("languages/texts/" + formatLocale + ".properties");
 
         if (properties != null) {
             localeMappings.put(formatLocale, properties);
@@ -175,8 +156,7 @@ public final class LanguageManager {
             return false;
         }
 
-        URL languageFile = LanguageManager.class
-                .getResource("/languages/texts/" + locale + ".properties");
+        URL languageFile = LanguageManager.class.getResource("/languages/texts/" + locale + ".properties");
 
         if (languageFile == null) {
             logger.warn(locale + " is not a supported Floodgate language.");
@@ -186,15 +166,18 @@ public final class LanguageManager {
     }
 
     private String formatNotFound(String key, Placeholder... placeholders) {
-        return key + ' ' + Arrays.stream(placeholders)
-                .map((resolver) -> {
-                    if (resolver.tag() instanceof PreProcess preProcess) {
-                        return resolver.key() + ": " + preProcess.value();
-                    } else if (resolver.tag() instanceof Inserting inserting) {
-                        return resolver.key() + ": " + MiniMessage.miniMessage().serialize(inserting.value());
-                    }
-                    return resolver.key() + " (unknown tag)";
-                })
-                .collect(Collectors.joining(", "));
+        return key
+                + ' '
+                + Arrays.stream(placeholders)
+                        .map((resolver) -> {
+                            if (resolver.tag() instanceof PreProcess preProcess) {
+                                return resolver.key() + ": " + preProcess.value();
+                            } else if (resolver.tag() instanceof Inserting inserting) {
+                                return resolver.key() + ": "
+                                        + MiniMessage.miniMessage().serialize(inserting.value());
+                            }
+                            return resolver.key() + " (unknown tag)";
+                        })
+                        .collect(Collectors.joining(", "));
     }
 }

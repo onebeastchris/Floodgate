@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.scope;
 
 import io.micronaut.context.annotation.Requires;
@@ -11,5 +16,4 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
 @Requires(property = "platform.integrated", value = "true")
 @Named
-public @interface IntegratedOnly {
-}
+public @interface IntegratedOnly {}

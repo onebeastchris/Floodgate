@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 GeyserMC
+ * Copyright (c) 2024-2025 GeyserMC
  * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */

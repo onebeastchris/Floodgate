@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.core.util;
 
 import jakarta.annotation.Nullable;
@@ -58,13 +38,11 @@ public final class ReflectionUtils {
      * @param className the prefix class to find
      * @return the class if found, otherwise null
      */
-    @Nullable
-    public static Class<?> getPrefixedClass(String className) {
+    @Nullable public static Class<?> getPrefixedClass(String className) {
         return getClass(applyPrefix(className));
     }
 
-    @Nullable
-    public static Class<?> getPrefixedClassSilently(String className) {
+    @Nullable public static Class<?> getPrefixedClassSilently(String className) {
         try {
             return Class.forName(applyPrefix(className));
         } catch (ClassNotFoundException ignored) {
@@ -81,8 +59,7 @@ public final class ReflectionUtils {
      * @param className the name of the class to find
      * @return the class or null if the class wasn't found.
      */
-    @Nullable
-    public static Class<?> getClass(String className) {
+    @Nullable public static Class<?> getClass(String className) {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException exception) {
@@ -91,8 +68,7 @@ public final class ReflectionUtils {
         }
     }
 
-    @Nullable
-    @SuppressWarnings("unchecked")
+    @Nullable @SuppressWarnings("unchecked")
     public static <T> Class<T> getCastedClass(String className) {
         return (Class<T>) getClass(className);
     }
@@ -135,8 +111,7 @@ public final class ReflectionUtils {
         return clazz;
     }
 
-    @Nullable
-    public static <T> Constructor<T> getConstructor(Class<T> clazz, boolean declared, Class<?>... parameters) {
+    @Nullable public static <T> Constructor<T> getConstructor(Class<T> clazz, boolean declared, Class<?>... parameters) {
         try {
             Constructor<T> constructor;
             if (declared) {
@@ -151,8 +126,7 @@ public final class ReflectionUtils {
         }
     }
 
-    @Nullable
-    public static <T> T newInstance(Constructor<T> constructor, Object... parameters) {
+    @Nullable public static <T> T newInstance(Constructor<T> constructor, Object... parameters) {
         try {
             return constructor.newInstance(parameters);
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
@@ -172,8 +146,7 @@ public final class ReflectionUtils {
      * @param declared  if the field is declared.
      * @return the field if found, otherwise null
      */
-    @Nullable
-    public static Field getField(Class<?> clazz, String fieldName, boolean declared) {
+    @Nullable public static Field getField(Class<?> clazz, String fieldName, boolean declared) {
         try {
             if (declared) {
                 return clazz.getField(fieldName);
@@ -192,8 +165,7 @@ public final class ReflectionUtils {
      * @param fieldName the name of the field
      * @return the field if found, otherwise null
      */
-    @Nullable
-    public static Field getField(Class<?> clazz, String fieldName) {
+    @Nullable public static Field getField(Class<?> clazz, String fieldName) {
         Field field = getField(clazz, fieldName, true);
         if (field != null) {
             return field;
@@ -209,8 +181,7 @@ public final class ReflectionUtils {
      * @param declared  if the field is declared
      * @return the field if it has been found, otherwise null
      */
-    @Nullable
-    public static Field getFieldOfType(Class<?> clazz, Class<?> fieldType, boolean declared) {
+    @Nullable public static Field getFieldOfType(Class<?> clazz, Class<?> fieldType, boolean declared) {
         Field[] fields = declared ? clazz.getDeclaredFields() : clazz.getFields();
         for (Field field : fields) {
             makeAccessible(field);
@@ -230,8 +201,7 @@ public final class ReflectionUtils {
      * @param fieldType the type of the declared field
      * @return the field if it has been found, otherwise null
      */
-    @Nullable
-    public static Field getFieldOfType(Class<?> clazz, Class<?> fieldType) {
+    @Nullable public static Field getFieldOfType(Class<?> clazz, Class<?> fieldType) {
         return getFieldOfType(clazz, fieldType, true);
     }
 
@@ -244,8 +214,7 @@ public final class ReflectionUtils {
      * @param field    the field to get the value from
      * @return the value when succeeded, otherwise null
      */
-    @Nullable
-    public static Object getValue(Object instance, Field field) {
+    @Nullable public static Object getValue(Object instance, Field field) {
         makeAccessible(field);
         try {
             return field.get(instance);
@@ -281,8 +250,7 @@ public final class ReflectionUtils {
      * @param fieldName the name of the field to get the value from
      * @return the value of the field when succeeded, otheriwse null
      */
-    @Nullable
-    public static Object getValue(Object instance, String fieldName) {
+    @Nullable public static Object getValue(Object instance, String fieldName) {
         return getValue(instance, getField(instance.getClass(), fieldName));
     }
 
@@ -295,8 +263,7 @@ public final class ReflectionUtils {
      * @return the casted value when succeeded, otherwise null
      */
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> T getCastedValue(Object instance, Field field) {
+    @Nullable public static <T> T getCastedValue(Object instance, Field field) {
         return (T) getValue(instance, field);
     }
 
@@ -309,13 +276,11 @@ public final class ReflectionUtils {
      * @return the casted value when succeeded, otherwise null
      */
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> T getCastedValue(Object instance, String fieldName) {
+    @Nullable public static <T> T getCastedValue(Object instance, String fieldName) {
         return (T) getValue(instance, getField(instance.getClass(), fieldName));
     }
 
-    @Nullable
-    public static <T> T castedStaticValue(Field field) {
+    @Nullable public static <T> T castedStaticValue(Field field) {
         return getCastedValue(null, field);
     }
 
@@ -375,12 +340,7 @@ public final class ReflectionUtils {
      * @param arguments the classes of the method arguments
      * @return the requested method if it has been found, otherwise null
      */
-    @Nullable
-    public static Method getMethod(
-            Class<?> clazz,
-            String method,
-            boolean declared,
-            Class<?>... arguments) {
+    @Nullable public static Method getMethod(Class<?> clazz, String method, boolean declared, Class<?>... arguments) {
         try {
             if (declared) {
                 return clazz.getMethod(method, arguments);
@@ -400,8 +360,7 @@ public final class ReflectionUtils {
      * @param arguments  the classes of the method arguments
      * @return the requested method if it has been found, otherwise null
      */
-    @Nullable
-    public static Method getMethod(Class<?> clazz, String methodName, Class<?>... arguments) {
+    @Nullable public static Method getMethod(Class<?> clazz, String methodName, Class<?>... arguments) {
         Method method = getMethod(clazz, methodName, true, arguments);
         if (method != null) {
             return method;
@@ -418,23 +377,19 @@ public final class ReflectionUtils {
      * @param arguments  the classes of the method arguments
      * @return the requested method if it has been found, otherwise null
      */
-    @Nullable
-    public static Method getMethod(Object instance, String methodName, Class<?>... arguments) {
+    @Nullable public static Method getMethod(Object instance, String methodName, Class<?>... arguments) {
         return getMethod(instance.getClass(), methodName, arguments);
     }
 
-    @Nullable
-    public static Method getMethodThatReturns(
-            Class<?> clazz,
-            Class<?> returnType,
-            boolean declared,
-            Class<?>... parameterTypes) {
+    @Nullable public static Method getMethodThatReturns(
+            Class<?> clazz, Class<?> returnType, boolean declared, Class<?>... parameterTypes) {
 
         Method[] methods = declared ? clazz.getDeclaredMethods() : clazz.getMethods();
 
-        outer : for (Method method : methods) {
-            if (parameterTypes.length != method.getParameterCount() ||
-                    !method.getReturnType().equals(returnType)) {
+        outer:
+        for (Method method : methods) {
+            if (parameterTypes.length != method.getParameterCount()
+                    || !method.getReturnType().equals(returnType)) {
                 continue;
             }
 
@@ -459,8 +414,7 @@ public final class ReflectionUtils {
      * @param declared   if the method is declared
      * @return the method if it has been found, otherwise null
      */
-    @Nullable
-    public static Method getMethodByName(Class<?> clazz, String methodName, boolean declared) {
+    @Nullable public static Method getMethodByName(Class<?> clazz, String methodName, boolean declared) {
         Method[] methods = declared ? clazz.getDeclaredMethods() : clazz.getMethods();
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
@@ -478,8 +432,7 @@ public final class ReflectionUtils {
      * @param declared  if the method is declared
      * @return the method if it has been found, otherwise null
      */
-    @Nullable
-    public static Method getMethodFromParam(Class<?> clazz, Class<?> paramType, boolean declared) {
+    @Nullable public static Method getMethodFromParam(Class<?> clazz, Class<?> paramType, boolean declared) {
         Method[] methods = declared ? clazz.getDeclaredMethods() : clazz.getMethods();
         for (Method method : methods) {
             for (Class<?> parameter : method.getParameterTypes()) {
@@ -499,8 +452,7 @@ public final class ReflectionUtils {
      * @param arguments the arguments of the method
      * @return the value got from invoking the method, or null when failed to invoke
      */
-    @Nullable
-    public static Object invoke(Object instance, Method method, Object... arguments) {
+    @Nullable public static Object invoke(Object instance, Method method, Object... arguments) {
         if (method == null) {
             return null;
         }
@@ -513,8 +465,7 @@ public final class ReflectionUtils {
         }
     }
 
-    @Nullable
-    public static <T> T cast(Object instance, Class<T> castTo) {
+    @Nullable public static <T> T cast(Object instance, Class<T> castTo) {
         if (castTo == null) {
             throw new IllegalArgumentException("Cannot cast instance to null");
         }
@@ -530,8 +481,7 @@ public final class ReflectionUtils {
      * @return the casted value got from invoking the method, or null when failed to invoke
      */
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> T castedInvoke(Object instance, Method method, Object... arguments) {
+    @Nullable public static <T> T castedInvoke(Object instance, Method method, Object... arguments) {
         return (T) invoke(instance, method, arguments);
     }
 
@@ -542,8 +492,7 @@ public final class ReflectionUtils {
      * @param method   the method to invoke
      * @return the casted value got from invoking the method, or null when failed to invoke
      */
-    @Nullable
-    public static <T> T castedInvoke(Object instance, String method) {
+    @Nullable public static <T> T castedInvoke(Object instance, String method) {
         return castedInvoke(instance, getMethod(instance.getClass(), method));
     }
 
@@ -554,8 +503,7 @@ public final class ReflectionUtils {
      * @param method the name of the method to invoke
      * @return the value got from invoking the status method, or null when failed to invoke
      */
-    @Nullable
-    public static Object invokeStatic(Class<?> clazz, String method) {
+    @Nullable public static Object invokeStatic(Class<?> clazz, String method) {
         return invoke(null, getMethod(clazz, method));
     }
 

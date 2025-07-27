@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.core.crypto.aes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,10 +18,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 final class AesDataCodecTest {
     @ParameterizedTest
-    @CsvSource({
-            "+/XzOuSMr6JAETpBBsgttA==, Hello world!",
-            "i0Z5ENhHiwe6Xn3HxJkdfw==, Cya :o"
-    })
+    @CsvSource({"+/XzOuSMr6JAETpBBsgttA==, Hello world!", "i0Z5ENhHiwe6Xn3HxJkdfw==, Cya :o"})
     void roundtrip(ArgumentsAccessor arguments) throws Exception {
         var messageBuffer = ByteBuffer.wrap(arguments.getString(1).getBytes(StandardCharsets.UTF_8));
 
@@ -64,7 +41,7 @@ final class AesDataCodecTest {
 
     @ParameterizedTest
     @CsvSource({
-            "+/XzOuSMr6JAETpBBsgttA==, Hello world!",
+        "+/XzOuSMr6JAETpBBsgttA==, Hello world!",
     })
     void encodeIvUniqueness(ArgumentsAccessor arguments) {
         var sampleSize = 5;
@@ -89,10 +66,10 @@ final class AesDataCodecTest {
 
     @ParameterizedTest
     @CsvSource({
-            "+/XzOuSMr6JAETpBBsgttA==, Hello world!, Dc38Ad2W11gr2hqJ, nu187LoTVbevPEImX+4dPk773/Q+kZoJLh84iw==",
-            "+/XzOuSMr6JAETpBBsgttA==, Hello world!, 9VsF6QkrCIQY96Aj, LNJE5xmOQn632x2N/H91MghOtmY1F4bRm98LlQ==",
-            "i0Z5ENhHiwe6Xn3HxJkdfw==, Cya :o, CNgdhKbZiA3M1yb/, m81R2ImpuB1bawcjSZgRxa+O5c63vQ==",
-            "i0Z5ENhHiwe6Xn3HxJkdfw==, Cya :o, 9jL7BFVzEA/OpKDs, fB7XQb4aPIjp16aZoc+D8hjFxYOZTQ=="
+        "+/XzOuSMr6JAETpBBsgttA==, Hello world!, Dc38Ad2W11gr2hqJ, nu187LoTVbevPEImX+4dPk773/Q+kZoJLh84iw==",
+        "+/XzOuSMr6JAETpBBsgttA==, Hello world!, 9VsF6QkrCIQY96Aj, LNJE5xmOQn632x2N/H91MghOtmY1F4bRm98LlQ==",
+        "i0Z5ENhHiwe6Xn3HxJkdfw==, Cya :o, CNgdhKbZiA3M1yb/, m81R2ImpuB1bawcjSZgRxa+O5c63vQ==",
+        "i0Z5ENhHiwe6Xn3HxJkdfw==, Cya :o, 9jL7BFVzEA/OpKDs, fB7XQb4aPIjp16aZoc+D8hjFxYOZTQ=="
     })
     void decode(ArgumentsAccessor arguments) throws Exception {
         var keyBytes = Base64.getDecoder().decode(arguments.getString(0));

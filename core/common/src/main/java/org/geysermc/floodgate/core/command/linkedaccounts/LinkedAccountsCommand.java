@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.command.linkedaccounts;
 
 import jakarta.inject.Singleton;
@@ -13,7 +18,9 @@ final class LinkedAccountsCommand extends SubCommands {
     }
 
     public static final class LinkedAccountsCommonMessage {
-        public static final TranslatableMessage NOT_FOUND = new TranslatableMessage("floodgate.command.linkedaccounts.common.not_found", MessageType.ERROR);
-        public static final TranslatableMessage LINK_INFO = new TranslatableMessage("floodgate.command.linkedaccounts.common.link_info");
+        public static final TranslatableMessage NOT_FOUND =
+                new TranslatableMessage("floodgate.command.linkedaccounts.common.not_found", MessageType.ERROR);
+        public static final TranslatableMessage LINK_INFO =
+                new TranslatableMessage("floodgate.command.linkedaccounts.common.link_info");
     }
 }

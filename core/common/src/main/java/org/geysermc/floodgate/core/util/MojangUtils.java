@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.util;
 
 import jakarta.inject.Inject;
@@ -11,18 +16,23 @@ import org.geysermc.floodgate.core.skin.SkinDataImpl;
 
 @Singleton
 public final class MojangUtils {
-    @Inject SessionServerClient sessionClient;
-    @Inject FloodgateLogger logger;
+    @Inject
+    SessionServerClient sessionClient;
+
+    @Inject
+    FloodgateLogger logger;
 
     public CompletableFuture<SkinData> skinFor(UUID uuid) {
-        return sessionClient.profileWithProperties(uuid)
+        return sessionClient
+                .profileWithProperties(uuid)
                 .thenApply(skin -> {
                     var texture = skin.texture();
                     if (texture == null) {
                         return SkinDataImpl.DEFAULT_SKIN;
                     }
                     return new SkinDataImpl(texture.value(), texture.signature());
-                }).exceptionally(exception -> {
+                })
+                .exceptionally(exception -> {
                     logger.debug("Unexpected skin fetch error for " + uuid, exception);
                     return SkinDataImpl.DEFAULT_SKIN;
                 });

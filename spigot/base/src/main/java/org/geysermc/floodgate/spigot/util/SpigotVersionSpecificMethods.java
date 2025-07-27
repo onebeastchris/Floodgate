@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.spigot.util;
 
 import com.mojang.authlib.properties.Property;
@@ -51,16 +31,14 @@ public final class SpigotVersionSpecificMethods {
         GET_SPIGOT = ReflectionUtils.getMethod(Player.class, "spigot");
         OLD_GET_LOCALE = ReflectionUtils.getMethod(Player.Spigot.class, "getLocale");
 
-        NEW_VISIBILITY = null != ReflectionUtils.getMethod(
-                Player.class, "hidePlayer",
-                Plugin.class, Player.class
-        );
+        NEW_VISIBILITY = null != ReflectionUtils.getMethod(Player.class, "hidePlayer", Plugin.class, Player.class);
 
         OLD_PROPERTY_VALUE = ReflectionUtils.getMethod(Property.class, "getValue");
         OLD_PROPERTY_SIGNATURE = ReflectionUtils.getMethod(Property.class, "getSignature");
     }
 
-    @Inject JavaPlugin plugin;
+    @Inject
+    JavaPlugin plugin;
 
     public String getLocale(Player player) {
         if (OLD_GET_LOCALE == null) {
@@ -102,9 +80,9 @@ public final class SpigotVersionSpecificMethods {
 
     public void schedule(Runnable runnable, long delay) {
         if (ClassNames.IS_FOLIA) {
-            plugin.getServer().getAsyncScheduler().runDelayed(
-                    plugin, $ -> runnable.run(), delay * 50, TimeUnit.MILLISECONDS
-            );
+            plugin.getServer()
+                    .getAsyncScheduler()
+                    .runDelayed(plugin, $ -> runnable.run(), delay * 50, TimeUnit.MILLISECONDS);
             return;
         }
         plugin.getServer().getScheduler().runTaskLater(plugin, runnable, delay);

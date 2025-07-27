@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.core.event;
 
 import io.micronaut.context.ApplicationContext;
@@ -41,9 +21,9 @@ import org.geysermc.floodgate.api.event.FloodgateSubscriber;
 
 @Singleton
 @SuppressWarnings("unchecked")
-public class EventBus extends EventBusImpl<Object, FloodgateSubscriber<?>>
-        implements FloodgateEventBus {
-    @Inject ApplicationContext context;
+public class EventBus extends EventBusImpl<Object, FloodgateSubscriber<?>> implements FloodgateEventBus {
+    @Inject
+    ApplicationContext context;
 
     @Override
     @SuppressWarnings("rawtypes")
@@ -58,19 +38,14 @@ public class EventBus extends EventBusImpl<Object, FloodgateSubscriber<?>>
             @NonNull Class<T> eventClass,
             @NonNull Subscribe subscribe,
             @NonNull H listener,
-            @NonNull BiConsumer<H, T> handler
-    ) {
+            @NonNull BiConsumer<H, T> handler) {
         return (B) new EventSubscriber<>(
-                eventClass, subscribe.postOrder(), subscribe.ignoreCancelled(), listener, handler
-        );
+                eventClass, subscribe.postOrder(), subscribe.ignoreCancelled(), listener, handler);
     }
 
     @Override
     protected <T, B extends Subscriber<T>> B makeSubscription(
-            @NonNull Class<T> eventClass,
-            @NonNull Consumer<T> handler,
-            @NonNull PostOrder postOrder
-    ) {
+            @NonNull Class<T> eventClass, @NonNull Consumer<T> handler, @NonNull PostOrder postOrder) {
         return (B) new EventSubscriber<>(eventClass, handler, postOrder);
     }
 }

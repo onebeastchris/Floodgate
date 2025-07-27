@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.database.loader;
 
 import io.micronaut.context.ApplicationContext;
@@ -11,7 +16,8 @@ import org.geysermc.floodgate.isolation.library.LibraryManager;
 public final class DatabaseLoader {
     private DatabaseLoader() {}
 
-    public static void load(FloodgateConfig config, LibraryManager manager, Path dataDirectory, ApplicationContext context) {
+    public static void load(
+            FloodgateConfig config, LibraryManager manager, Path dataDirectory, ApplicationContext context) {
         var databaseConfig = config.database();
         if (!databaseConfig.enabled()) {
             return;

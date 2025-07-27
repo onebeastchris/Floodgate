@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.util;
 
 /*
@@ -5,11 +10,13 @@ Code taken from Brigadier's StringArgumentType and StringReader
  */
 public final class BrigadierUtils {
     public static boolean isAllowedInUnquotedString(char c) {
-        return c >= '0' && c <= '9' ||
-                c >= 'A' && c <= 'Z' ||
-                c >= 'a' && c <= 'z' ||
-                c == '_' || c == '-' ||
-                c == '.' || c == '+';
+        return c >= '0' && c <= '9'
+                || c >= 'A' && c <= 'Z'
+                || c >= 'a' && c <= 'z'
+                || c == '_'
+                || c == '-'
+                || c == '.'
+                || c == '+';
     }
 
     public static String escapeIfRequired(String input) {

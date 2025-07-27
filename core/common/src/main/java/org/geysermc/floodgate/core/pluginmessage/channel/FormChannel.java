@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.core.pluginmessage.channel;
 
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
@@ -42,13 +22,17 @@ import org.geysermc.floodgate.core.pluginmessage.PluginMessageChannel;
 
 public class FormChannel implements PluginMessageChannel {
     private final FormDefinitions formDefinitions = FormDefinitions.instance();
-    private final Short2ObjectMap<Form> storedForms =
-            Short2ObjectMaps.synchronize(new Short2ObjectOpenHashMap<>());
+    private final Short2ObjectMap<Form> storedForms = Short2ObjectMaps.synchronize(new Short2ObjectOpenHashMap<>());
     private final AtomicInteger nextFormId = new AtomicInteger(0);
 
-    @Inject PluginMessageUtils pluginMessageUtils;
-    @Inject FloodgateConfig config;
-    @Inject FloodgateLogger logger;
+    @Inject
+    PluginMessageUtils pluginMessageUtils;
+
+    @Inject
+    FloodgateConfig config;
+
+    @Inject
+    FloodgateLogger logger;
 
     @Override
     public String getIdentifier() {
@@ -56,12 +40,7 @@ public class FormChannel implements PluginMessageChannel {
     }
 
     @Override
-    public Result handleProxyCall(
-            byte[] data,
-            UUID sourceUuid,
-            String sourceUsername,
-            Identity sourceIdentity
-    ) {
+    public Result handleProxyCall(byte[] data, UUID sourceUuid, String sourceUsername, Identity sourceIdentity) {
         if (sourceIdentity == Identity.SERVER) {
             // send it to the client
             return Result.forward();
@@ -80,8 +59,7 @@ public class FormChannel implements PluginMessageChannel {
             }
 
             if (!callResponseConsumer(data)) {
-                logger.error("Couldn't find stored form with id {} for player {}",
-                        formId, sourceUsername);
+                logger.error("Couldn't find stored form with id {} for player {}", formId, sourceUsername);
             }
         }
         return Result.handled();
@@ -107,10 +85,7 @@ public class FormChannel implements PluginMessageChannel {
 
         FormDefinition<Form, ?, ?> definition = formDefinitions.definitionFor(form);
 
-        byte[] jsonData =
-                definition.codec()
-                        .jsonData(form)
-                        .getBytes(StandardCharsets.UTF_8);
+        byte[] jsonData = definition.codec().jsonData(form).getBytes(StandardCharsets.UTF_8);
 
         byte[] data = new byte[jsonData.length + 3];
         data[0] = (byte) definition.formType().ordinal();
@@ -125,8 +100,7 @@ public class FormChannel implements PluginMessageChannel {
         if (storedForm != null) {
             String responseData = new String(data, 2, data.length - 2, StandardCharsets.UTF_8);
             try {
-                formDefinitions.definitionFor(storedForm)
-                        .handleFormResponse(storedForm, responseData);
+                formDefinitions.definitionFor(storedForm).handleFormResponse(storedForm, responseData);
             } catch (Exception e) {
                 logger.error("Error while processing form response!", e);
             }
@@ -141,7 +115,6 @@ public class FormChannel implements PluginMessageChannel {
 
     protected short getNextFormId() {
         // signed bit is used to check if the form is from a proxy or a server
-        return (short) nextFormId.getAndUpdate(
-                (number) -> number == Short.MAX_VALUE ? 0 : number + 1);
+        return (short) nextFormId.getAndUpdate((number) -> number == Short.MAX_VALUE ? 0 : number + 1);
     }
 }

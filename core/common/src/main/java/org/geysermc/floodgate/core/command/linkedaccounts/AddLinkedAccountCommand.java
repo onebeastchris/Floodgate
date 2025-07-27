@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 GeyserMC
+ * Licensed under the MIT license
+ * @link https://github.com/GeyserMC/Floodgate
+ */
 package org.geysermc.floodgate.core.command.linkedaccounts;
 
 import static org.geysermc.floodgate.core.platform.command.Placeholder.dynamic;
@@ -27,12 +32,22 @@ import org.incendo.cloud.context.CommandContext;
 
 @Singleton
 final class AddLinkedAccountCommand extends FloodgateSubCommand {
-    @Inject Optional<LocalPlayerLinking> optionalLinking;
-    @Inject ProfileFetcher fetcher;
-    @Inject FloodgateLogger logger;
+    @Inject
+    Optional<LocalPlayerLinking> optionalLinking;
+
+    @Inject
+    ProfileFetcher fetcher;
+
+    @Inject
+    FloodgateLogger logger;
 
     AddLinkedAccountCommand() {
-        super(LinkedAccountsCommand.class, "add", "Manually add a locally linked account", Permission.COMMAND_LINKED_MANAGE, "a");
+        super(
+                LinkedAccountsCommand.class,
+                "add",
+                "Manually add a locally linked account",
+                Permission.COMMAND_LINKED_MANAGE,
+                "a");
     }
 
     @Override
@@ -73,42 +88,42 @@ final class AddLinkedAccountCommand extends FloodgateSubCommand {
             futures.add(fetcher.fetchUniqueIdFor(javaRef.get().username()).thenAccept(javaRef::set));
         }
 
-        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new))
-                .thenAccept($ -> {
-                    var bedrock = bedrockRef.get();
-                    var java = javaRef.get();
+        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).thenAccept($ -> {
+            var bedrock = bedrockRef.get();
+            var java = javaRef.get();
 
-                    if (bedrock == null) {
-                        sender.sendMessage(
-                                LinkedAccountsCommonMessage.NOT_FOUND,
-                                literal("platform", "Bedrock"),
-                                literal("target", bedrockInput.username()));
-                    }
-                    if (java == null) {
-                        sender.sendMessage(
-                                LinkedAccountsCommonMessage.NOT_FOUND,
-                                literal("platform", "Java"),
-                                literal("target", javaInput.username()));
-                    }
+            if (bedrock == null) {
+                sender.sendMessage(
+                        LinkedAccountsCommonMessage.NOT_FOUND,
+                        literal("platform", "Bedrock"),
+                        literal("target", bedrockInput.username()));
+            }
+            if (java == null) {
+                sender.sendMessage(
+                        LinkedAccountsCommonMessage.NOT_FOUND,
+                        literal("platform", "Java"),
+                        literal("target", javaInput.username()));
+            }
 
-                    linking.addLink(java.uuid(), java.username(), bedrock.uuid()).whenComplete((player, throwable) -> {
-                        if (throwable != null) {
-                            sender.sendMessage(LinkAccountCommand.Message.LINK_REQUEST_ERROR);
-                            logger.error("Exception while manually linking accounts", throwable);
-                            return;
-                        }
-                        sender.sendMessage(
-                                Message.ADD_SUCCESS,
-                                dynamic("link_info", LinkedAccountsCommonMessage.LINK_INFO, sender),
-                                literal("bedrock_id", bedrock.uuid()),
-                                literal("bedrock_name", bedrock.username()),
-                                literal("java_name", java.username()),
-                                literal("java_uuid", java.uuid()));
-                    });
-                });
+            linking.addLink(java.uuid(), java.username(), bedrock.uuid()).whenComplete((player, throwable) -> {
+                if (throwable != null) {
+                    sender.sendMessage(LinkAccountCommand.Message.LINK_REQUEST_ERROR);
+                    logger.error("Exception while manually linking accounts", throwable);
+                    return;
+                }
+                sender.sendMessage(
+                        Message.ADD_SUCCESS,
+                        dynamic("link_info", LinkedAccountsCommonMessage.LINK_INFO, sender),
+                        literal("bedrock_id", bedrock.uuid()),
+                        literal("bedrock_name", bedrock.username()),
+                        literal("java_name", java.username()),
+                        literal("java_uuid", java.uuid()));
+            });
+        });
     }
 
     public static final class Message {
-        public static final TranslatableMessage ADD_SUCCESS = new TranslatableMessage("floodgate.command.linkedaccounts.add.success", MessageType.SUCCESS);
+        public static final TranslatableMessage ADD_SUCCESS =
+                new TranslatableMessage("floodgate.command.linkedaccounts.add.success", MessageType.SUCCESS);
     }
 }

@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2022 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.api.link;
 
 import java.util.UUID;
@@ -50,8 +30,7 @@ public interface PlayerLink {
      * @return a completable future with the {@link LinkedPlayer}. The future will have a null value
      * if that Bedrock player isn't linked
      */
-    @NonNull
-    CompletableFuture<LinkedPlayer> getLinkedPlayer(@NonNull UUID bedrockId);
+    @NonNull CompletableFuture<LinkedPlayer> getLinkedPlayer(@NonNull UUID bedrockId);
 
     /**
      * Tells if the given player is a linked player
@@ -59,8 +38,7 @@ public interface PlayerLink {
      * @param playerId the uuid of the player to check, can be both a Java or a Bedrock uuid
      * @return true if the player is a linked player
      */
-    @NonNull
-    CompletableFuture<Boolean> isLinkedPlayer(@NonNull UUID playerId);
+    @NonNull CompletableFuture<Boolean> isLinkedPlayer(@NonNull UUID playerId);
 
     /**
      * Links a Java account to a Bedrock account.
@@ -70,11 +48,7 @@ public interface PlayerLink {
      * @param username  the username of the Java player
      * @return a future holding void on success or completed exceptionally when failed
      */
-    @NonNull
-    CompletableFuture<Void> linkPlayer(
-            @NonNull UUID bedrockId,
-            @NonNull UUID javaId,
-            @NonNull String username);
+    @NonNull CompletableFuture<Void> linkPlayer(@NonNull UUID bedrockId, @NonNull UUID javaId, @NonNull String username);
 
     /**
      * Unlinks a Java account from a Bedrock account.
@@ -82,8 +56,7 @@ public interface PlayerLink {
      * @param javaId the uuid of the Java player
      * @return a future holding void on success or completed exceptionally when failed
      */
-    @NonNull
-    CompletableFuture<Void> unlinkPlayer(@NonNull UUID javaId);
+    @NonNull CompletableFuture<Void> unlinkPlayer(@NonNull UUID javaId);
 
     /**
      * Creates a link request for the given Java player.
@@ -94,12 +67,8 @@ public interface PlayerLink {
      * @return a future holding the result of the link request which will be a {@link
      * LinkRequestResult} on failure and the link code (string) on success
      */
-    @NonNull
-    CompletableFuture<?> createLinkRequest(
-            @NonNull UUID javaId,
-            @NonNull String javaUsername,
-            @NonNull String bedrockUsername
-    );
+    @NonNull CompletableFuture<?> createLinkRequest(
+            @NonNull UUID javaId, @NonNull String javaUsername, @NonNull String bedrockUsername);
 
     /**
      * Verifies a link request for the given Bedrock player.
@@ -110,13 +79,11 @@ public interface PlayerLink {
      * @param code            the code created in {@link #createLinkRequest(UUID, String, String)}
      * @return a future holding the result of the link verification
      */
-    @NonNull
-    CompletableFuture<LinkRequestResult> verifyLinkRequest(
+    @NonNull CompletableFuture<LinkRequestResult> verifyLinkRequest(
             @NonNull UUID bedrockId,
             @NonNull String javaUsername,
             @NonNull String bedrockUsername,
-            @NonNull String code
-    );
+            @NonNull String code);
 
     /**
      * Returns the name of this database implementation. This will return null when Player Linking

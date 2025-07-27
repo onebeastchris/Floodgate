@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.spigot.inject;
 
 import io.netty.channel.Channel;
@@ -45,12 +25,14 @@ import org.geysermc.floodgate.spigot.util.ClassNames;
 
 @Singleton
 public final class SpigotInjector extends Netty4PlatformInjector {
-    @Inject FloodgateLogger logger;
+    @Inject
+    FloodgateLogger logger;
 
     private Object serverConnection;
     private String injectedFieldName;
 
-    @Getter private boolean injected;
+    @Getter
+    private boolean injected;
 
     @Override
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
@@ -150,8 +132,7 @@ public final class SpigotInjector extends Netty4PlatformInjector {
             // (which would be our CustomList e.g.) in a separate object
             logger.debug(
                     "Unable to remove all references of Floodgate due to {}! ",
-                    value.getClass().getName()
-            );
+                    value.getClass().getName());
         }
 
         // remove injection from clients
@@ -159,7 +140,7 @@ public final class SpigotInjector extends Netty4PlatformInjector {
             removeAddonsCall(channel);
         }
 
-        //todo make sure that all references are removed from the channels,
+        // todo make sure that all references are removed from the channels,
         // except from one AttributeKey with Floodgate player data which could be used
         // after reloading
 
@@ -175,9 +156,7 @@ public final class SpigotInjector extends Netty4PlatformInjector {
         // method by CraftBukkit to get the instance of the MinecraftServer
         Object minecraftServerInstance = ReflectionUtils.invokeStatic(minecraftServer, "getServer");
 
-        Method method = ReflectionUtils.getMethodThatReturns(
-                minecraftServer, ClassNames.SERVER_CONNECTION, true
-        );
+        Method method = ReflectionUtils.getMethodThatReturns(minecraftServer, ClassNames.SERVER_CONNECTION, true);
 
         serverConnection = ReflectionUtils.invoke(minecraftServerInstance, method);
 

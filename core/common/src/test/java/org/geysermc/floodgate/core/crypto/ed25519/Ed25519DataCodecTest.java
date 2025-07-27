@@ -1,28 +1,8 @@
 /*
- * Copyright (c) 2019-2023 GeyserMC. http://geysermc.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author GeyserMC
+ * Copyright (c) 2019-2025 GeyserMC
+ * Licensed under the MIT license
  * @link https://github.com/GeyserMC/Floodgate
  */
-
 package org.geysermc.floodgate.core.crypto.ed25519;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,8 +23,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 final class Ed25519DataCodecTest {
     @ParameterizedTest
     @CsvSource({
-            "Hello!!, /ywjHxqp70GbTITLypZeovSG8YQs3xrv7BTP6tb9QIAD7J+xuH4E768nmv5QylvCk9Iai/t+1k/y5JCSLR3PAw==, MCowBQYDK2VwAyEA3lAOkEnih8ucexsKDtJb+eiwmMZgSLcCWNjSm+RCF9w=",
-            "What's up?, tGGiuu+114Ta2OGCdj8Ntpu3m3chhGG6NQN1WMXpg+5XGwO8efmpyU6ISlmqRY1+mCSmXQhS1VKXfvCaCelXAA==, MCowBQYDK2VwAyEAepV2vnvTx68hraRTtF8jKK8POX/60i3jVMHc9BxEVkE="
+        "Hello!!, /ywjHxqp70GbTITLypZeovSG8YQs3xrv7BTP6tb9QIAD7J+xuH4E768nmv5QylvCk9Iai/t+1k/y5JCSLR3PAw==, MCowBQYDK2VwAyEA3lAOkEnih8ucexsKDtJb+eiwmMZgSLcCWNjSm+RCF9w=",
+        "What's up?, tGGiuu+114Ta2OGCdj8Ntpu3m3chhGG6NQN1WMXpg+5XGwO8efmpyU6ISlmqRY1+mCSmXQhS1VKXfvCaCelXAA==, MCowBQYDK2VwAyEAepV2vnvTx68hraRTtF8jKK8POX/60i3jVMHc9BxEVkE="
     })
     void decode(ArgumentsAccessor arguments) throws Exception {
         var messageBytes = arguments.getString(0).getBytes(StandardCharsets.UTF_8);
@@ -61,10 +41,11 @@ final class Ed25519DataCodecTest {
         assertEquals(0, ByteBuffer.wrap(messageBytes).compareTo(decoded));
         assertThrowsExactly(IllegalStateException.class, () -> codec.encode(ByteBuffer.wrap(messageBytes)));
     }
+
     @ParameterizedTest
     @CsvSource({
-            "Hello!!, /ywjHxqp70GbTITLypZeovSG8YQs3xrv7BTP6tb9QIAD7J+xuH4E768nmv5QylvCk9Iai/t+1k/y5JCSLR3PAw==, MC4CAQAwBQYDK2VwBCIEINFyuLU8O7U/w4nkC5RCzTb2BnlUy8kjo1jwCkluqgYZ",
-            "What's up?, tGGiuu+114Ta2OGCdj8Ntpu3m3chhGG6NQN1WMXpg+5XGwO8efmpyU6ISlmqRY1+mCSmXQhS1VKXfvCaCelXAA==, MC4CAQAwBQYDK2VwBCIEII49NjdgnRL/EZsat0qsx1owAkEMj3rtLbNpjd9mbKSf"
+        "Hello!!, /ywjHxqp70GbTITLypZeovSG8YQs3xrv7BTP6tb9QIAD7J+xuH4E768nmv5QylvCk9Iai/t+1k/y5JCSLR3PAw==, MC4CAQAwBQYDK2VwBCIEINFyuLU8O7U/w4nkC5RCzTb2BnlUy8kjo1jwCkluqgYZ",
+        "What's up?, tGGiuu+114Ta2OGCdj8Ntpu3m3chhGG6NQN1WMXpg+5XGwO8efmpyU6ISlmqRY1+mCSmXQhS1VKXfvCaCelXAA==, MC4CAQAwBQYDK2VwBCIEII49NjdgnRL/EZsat0qsx1owAkEMj3rtLbNpjd9mbKSf"
     })
     void encode(ArgumentsAccessor arguments) throws Exception {
         var messageBytes = arguments.getString(0).getBytes(StandardCharsets.UTF_8);
@@ -82,14 +63,13 @@ final class Ed25519DataCodecTest {
         assertEquals(0, ByteBuffer.wrap(signature).compareTo(encoded.get(1)));
         assertThrowsExactly(
                 IllegalStateException.class,
-                () -> codec.decode(List.of(ByteBuffer.wrap(messageBytes), ByteBuffer.wrap(signature)))
-        );
+                () -> codec.decode(List.of(ByteBuffer.wrap(messageBytes), ByteBuffer.wrap(signature))));
     }
 
     @ParameterizedTest
     @CsvSource({
-            "Hello!!, MC4CAQAwBQYDK2VwBCIEINFyuLU8O7U/w4nkC5RCzTb2BnlUy8kjo1jwCkluqgYZ, MCowBQYDK2VwAyEA3lAOkEnih8ucexsKDtJb+eiwmMZgSLcCWNjSm+RCF9w=",
-            "What's up?, MC4CAQAwBQYDK2VwBCIEII49NjdgnRL/EZsat0qsx1owAkEMj3rtLbNpjd9mbKSf, MCowBQYDK2VwAyEAepV2vnvTx68hraRTtF8jKK8POX/60i3jVMHc9BxEVkE="
+        "Hello!!, MC4CAQAwBQYDK2VwBCIEINFyuLU8O7U/w4nkC5RCzTb2BnlUy8kjo1jwCkluqgYZ, MCowBQYDK2VwAyEA3lAOkEnih8ucexsKDtJb+eiwmMZgSLcCWNjSm+RCF9w=",
+        "What's up?, MC4CAQAwBQYDK2VwBCIEII49NjdgnRL/EZsat0qsx1owAkEMj3rtLbNpjd9mbKSf, MCowBQYDK2VwAyEAepV2vnvTx68hraRTtF8jKK8POX/60i3jVMHc9BxEVkE="
     })
     void roundtrip(ArgumentsAccessor arguments) throws Exception {
         var messageBuffer = ByteBuffer.wrap(arguments.getString(0).getBytes(StandardCharsets.UTF_8));

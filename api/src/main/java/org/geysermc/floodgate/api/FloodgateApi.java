@@ -93,6 +93,17 @@ public interface FloodgateApi {
      */
     boolean isFloodgateId(UUID uuid);
 
+    /**
+     * Checks if a player has a form currently open. This can be a translated dialogue,
+     * a form sent by a Floodgate API user, or a Geyser API user.
+     * If a form is sent while the player has one already open, the currently open form
+     * would be forcibly closed.
+     *
+     * @param uuid the uuid to check
+     * @return true if a form is open.
+     */
+    boolean hasFormOpen(UUID uuid);
+
     boolean sendForm(UUID uuid, Form form);
 
     boolean sendForm(UUID uuid, FormBuilder<?, ?, ?> formBuilder);

@@ -113,6 +113,11 @@ public interface FloodgatePlayer {
      */
     boolean isLinked();
 
+    /**
+     * Returns true if the player has a form open
+     */
+    boolean hasFormOpen();
+
     default boolean sendForm(Form form) {
         return FloodgateApi.getInstance().sendForm(getCorrectUniqueId(), form);
     }

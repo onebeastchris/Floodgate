@@ -43,6 +43,7 @@ import org.geysermc.floodgate.api.logger.FloodgateLogger;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.api.unsafe.Unsafe;
 import org.geysermc.floodgate.config.FloodgateConfig;
+import org.geysermc.floodgate.player.FloodgatePlayerImpl;
 import org.geysermc.floodgate.pluginmessage.PluginMessageManager;
 import org.geysermc.floodgate.pluginmessage.channel.FormChannel;
 import org.geysermc.floodgate.pluginmessage.channel.TransferChannel;
@@ -116,7 +117,21 @@ public class SimpleFloodgateApi implements FloodgateApi {
     }
 
     @Override
+    public boolean hasFormOpen(UUID uuid) {
+        FloodgatePlayer player = getPlayer(uuid);
+        if (player == null) {
+            return false;
+        }
+        return player.hasFormOpen();
+    }
+
+    @Override
     public boolean sendForm(UUID uuid, Form form) {
+        FloodgatePlayer player = getPlayer(uuid);
+        if (player == null) {
+            return false;
+        }
+        ((FloodgatePlayerImpl) player).setHasFormOpen(true);
         return pluginMessageManager.getChannel(FormChannel.class).sendForm(uuid, form);
     }
 
@@ -127,6 +142,11 @@ public class SimpleFloodgateApi implements FloodgateApi {
 
     @Override
     public boolean closeForm(UUID uuid) {
+        FloodgatePlayer player = getPlayer(uuid);
+        if (player == null) {
+            return false;
+        }
+        ((FloodgatePlayerImpl) player).setHasFormOpen(false);
         return pluginMessageManager.getChannel(FormChannel.class).closeForm(uuid);
     }
 

@@ -25,18 +25,25 @@
 
 package org.geysermc.floodgate.player;
 
+import com.google.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.ProxyFloodgateApi;
 import org.geysermc.floodgate.api.handshake.HandshakeData;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.api.player.PropertyKey;
 import org.geysermc.floodgate.api.player.PropertyKey.Result;
+import org.geysermc.floodgate.config.FloodgateConfig;
+import org.geysermc.floodgate.config.ProxyFloodgateConfig;
+import org.geysermc.floodgate.platform.pluginmessage.PluginMessageUtils;
+import org.geysermc.floodgate.pluginmessage.PluginMessageChannel;
+import org.geysermc.floodgate.pluginmessage.channel.HasFormOpenChannel;
 import org.geysermc.floodgate.util.BedrockData;
 import org.geysermc.floodgate.util.DeviceOs;
 import org.geysermc.floodgate.util.InputMode;
@@ -64,11 +71,15 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
 
     private final int subscribeId;
     private final String verifyCode;
+    private boolean hasFormOpen;
 
     @Getter(AccessLevel.PRIVATE)
     private Map<PropertyKey, Object> propertyKeyToValue;
     @Getter(AccessLevel.PRIVATE)
     private Map<String, PropertyKey> stringToPropertyKey;
+
+    @Inject private PluginMessageUtils pluginMessageUtils;
+    @Inject private FloodgateConfig config;
 
     static FloodgatePlayerImpl from(BedrockData data, HandshakeData handshakeData) {
         FloodgateApi api = FloodgateApi.getInstance();
@@ -101,6 +112,20 @@ public final class FloodgatePlayerImpl implements FloodgatePlayer {
     @Override
     public boolean isLinked() {
         return linkedPlayer != null;
+    }
+
+    @Override
+    public boolean hasFormOpen() {
+        return hasFormOpen;
+    }
+
+    public void setHasFormOpen(boolean hasFormOpen) {
+        this.hasFormOpen = hasFormOpen;
+        // Also send downstream!
+        if (config.isProxy() && ((ProxyFloodgateConfig) config).isSendFloodgateData()) {
+            pluginMessageUtils.sendMessage(getCorrectUniqueId(), true,
+                    HasFormOpenChannel.IDENTIFIER, new byte[hasFormOpen ? 1 : 0]);
+        }
     }
 
     public BedrockData toBedrockData() {

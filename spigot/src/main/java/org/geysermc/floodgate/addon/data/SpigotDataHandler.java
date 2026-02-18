@@ -34,6 +34,7 @@ import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
+import org.geysermc.floodgate.api.logger.FloodgateLogger;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.config.FloodgateConfig;
 import org.geysermc.floodgate.player.FloodgateHandshakeHandler;
@@ -59,9 +60,10 @@ public final class SpigotDataHandler extends CommonDataHandler {
             FloodgateHandshakeHandler handshakeHandler,
             FloodgateConfig config,
             AttributeKey<String> kickMessageAttribute,
-            SpigotVersionSpecificMethods versionSpecificMethods
+            SpigotVersionSpecificMethods versionSpecificMethods,
+            FloodgateLogger logger
     ) {
-        super(handshakeHandler, config, kickMessageAttribute, new PacketBlocker());
+        super(handshakeHandler, config, kickMessageAttribute, new PacketBlocker(), logger);
         this.versionSpecificMethods = versionSpecificMethods;
     }
 

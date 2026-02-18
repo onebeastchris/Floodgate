@@ -83,6 +83,7 @@ public final class SpigotInjector extends CommonPlatformInjector {
                         try {
                             injectClient((ChannelFuture) object);
                         } catch (Exception exception) {
+                            logger.error("Unable to inject client!");
                             exception.printStackTrace();
                         }
                     }
@@ -94,6 +95,7 @@ public final class SpigotInjector extends CommonPlatformInjector {
                         try {
                             injectClient((ChannelFuture) object);
                         } catch (Exception exception) {
+                            logger.error("Unable to inject client!");
                             exception.printStackTrace();
                         }
                     }

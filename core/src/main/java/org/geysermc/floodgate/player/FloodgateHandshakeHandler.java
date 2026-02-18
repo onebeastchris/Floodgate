@@ -41,6 +41,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
 import org.geysermc.floodgate.addon.data.HandshakeDataImpl;
 import org.geysermc.floodgate.addon.data.HandshakeHandlersImpl;
 import org.geysermc.floodgate.api.SimpleFloodgateApi;
@@ -287,6 +288,7 @@ public final class FloodgateHandshakeHandler {
 
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @Getter
+    @ToString
     public static class HandshakeResult extends IllegalStateException {
         private final ResultType resultType;
         private final HandshakeData handshakeData;

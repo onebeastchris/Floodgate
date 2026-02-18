@@ -26,6 +26,7 @@
 package org.geysermc.floodgate.addon.data;
 
 import com.google.common.collect.Queues;
+import com.google.inject.Inject;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -34,10 +35,12 @@ import java.net.InetSocketAddress;
 import java.util.Queue;
 import lombok.RequiredArgsConstructor;
 import org.geysermc.floodgate.api.handshake.HandshakeData;
+import org.geysermc.floodgate.api.logger.FloodgateLogger;
 import org.geysermc.floodgate.config.FloodgateConfig;
 import org.geysermc.floodgate.crypto.FloodgateCipher;
 import org.geysermc.floodgate.player.FloodgateHandshakeHandler;
 import org.geysermc.floodgate.player.FloodgateHandshakeHandler.HandshakeResult;
+import org.geysermc.floodgate.player.FloodgateHandshakeHandler.ResultType;
 import org.geysermc.floodgate.player.HostnameSeparationResult;
 import org.geysermc.floodgate.util.Constants;
 
@@ -47,6 +50,7 @@ public abstract class CommonDataHandler extends ChannelInboundHandlerAdapter {
     protected final FloodgateConfig config;
     protected final AttributeKey<String> kickMessageAttribute;
     protected final PacketBlocker blocker;
+    protected final FloodgateLogger logger;
 
     protected final Queue<Object> packetQueue = Queues.newConcurrentLinkedQueue();
     protected Object handshakePacket;
@@ -71,6 +75,7 @@ public abstract class CommonDataHandler extends ChannelInboundHandlerAdapter {
         HostnameSeparationResult separation = handshakeHandler.separateHostname(hostname);
 
         if (separation.floodgateData() == null) {
+            logger.error("Got handshake packet without floodgate data! " + handshakePacket + " with hostname " + hostname);
             // not a Floodgate player, make sure to resend the cancelled handshake packet
             disablePacketQueue(true);
             return;
@@ -93,6 +98,10 @@ public abstract class CommonDataHandler extends ChannelInboundHandlerAdapter {
                 .handle(channel, separation.floodgateData(), separation.hostnameRemainder())
                 .thenApply(result -> {
                     HandshakeData handshakeData = result.getHandshakeData();
+
+                    if (result.getResultType() != ResultType.SUCCESS) {
+                        logger.warn("Did not get ResultType.SUCCESS! Got: " + result);
+                    }
 
                     // we'll change the IP address to the real IP of the client very early on
                     // so that almost every plugin will use the real IP of the client

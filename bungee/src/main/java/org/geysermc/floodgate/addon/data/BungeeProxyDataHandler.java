@@ -37,6 +37,7 @@ import net.md_5.bungee.netty.HandlerBoss;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.PacketWrapper;
 import net.md_5.bungee.protocol.packet.Handshake;
+import org.geysermc.floodgate.api.logger.FloodgateLogger;
 import org.geysermc.floodgate.config.ProxyFloodgateConfig;
 import org.geysermc.floodgate.player.FloodgateHandshakeHandler;
 import org.geysermc.floodgate.util.ReflectionUtils;
@@ -59,8 +60,9 @@ public class BungeeProxyDataHandler extends CommonDataHandler {
             FloodgateHandshakeHandler handshakeHandler,
             ProxyFloodgateConfig config,
             AttributeKey<String> kickMessageAttribute,
-            PacketBlocker blocker) {
-        super(handshakeHandler, config, kickMessageAttribute, blocker);
+            PacketBlocker blocker,
+            FloodgateLogger logger) {
+        super(handshakeHandler, config, kickMessageAttribute, blocker, logger);
     }
 
     @Override

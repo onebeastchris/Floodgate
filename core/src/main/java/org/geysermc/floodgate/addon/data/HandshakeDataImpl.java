@@ -29,12 +29,14 @@ import io.netty.channel.Channel;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.geysermc.floodgate.api.handshake.HandshakeData;
 import org.geysermc.floodgate.config.FloodgateConfig;
 import org.geysermc.floodgate.util.BedrockData;
 import org.geysermc.floodgate.util.LinkedPlayer;
 import org.geysermc.floodgate.util.Utils;
 
+@ToString(exclude = "channel")
 @Getter
 public class HandshakeDataImpl implements HandshakeData {
     private final Channel channel;

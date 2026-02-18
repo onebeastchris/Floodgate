@@ -108,7 +108,7 @@ public final class VelocityProxyDataHandler extends CommonDataHandler {
             PacketBlocker blocker,
             AttributeKey<String> kickMessageAttribute,
             FloodgateLogger logger) {
-        super(handshakeHandler, config, kickMessageAttribute, blocker);
+        super(handshakeHandler, config, kickMessageAttribute, blocker, logger);
         this.logger = logger;
     }
 

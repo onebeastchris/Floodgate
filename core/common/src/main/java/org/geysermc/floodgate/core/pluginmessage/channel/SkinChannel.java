@@ -93,7 +93,7 @@ public class SkinChannel implements PluginMessageChannel {
 
         SkinData skinData = new SkinDataImpl(value, signature);
 
-        skinApplier.applySkin(connection, skinData);
+        skinApplier.applySkin(connection, skinData, false);
 
         return Result.handled();
     }

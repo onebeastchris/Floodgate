@@ -35,6 +35,7 @@ public interface SkinApplier {
      *
      * @param connection player to apply skin to
      * @param skinData data for skin to apply to player
+     * @param internal whether the request for applying a skin came from an internal or an external source
      */
-    void applySkin(@NonNull Connection connection, @NonNull SkinData skinData);
+    void applySkin(@NonNull Connection connection, @NonNull SkinData skinData, boolean internal);
 }

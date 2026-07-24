@@ -45,14 +45,14 @@ public class VelocitySkinApplier implements SkinApplier {
     @Inject EventBus eventBus;
 
     @Override
-    public void applySkin(Connection connection, SkinData skinData) {
+    public void applySkin(Connection connection, SkinData skinData, boolean internal) {
         server.getPlayer(connection.javaUuid()).ifPresent(player -> {
             List<Property> properties = new ArrayList<>(player.getGameProfileProperties());
 
             SkinData currentSkin = currentSkin(properties);
 
             SkinApplyEvent event = new SkinApplyEventImpl(connection, currentSkin, skinData);
-            event.cancelled(connection.isLinked());
+            event.cancelled(!internal && connection.isLinked());
 
             eventBus.fire(event);
 

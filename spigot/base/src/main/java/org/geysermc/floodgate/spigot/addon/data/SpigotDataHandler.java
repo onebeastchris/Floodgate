@@ -175,12 +175,11 @@ public final class SpigotDataHandler extends CommonNettyDataHandler {
 
             GameProfile gameProfile = new GameProfile(connection.javaUuid(), connection.javaUsername());
 
-            if (!connection.isLinked()) {
-                // Otherwise game server will try to fetch the skin from Mojang.
-                // No need to worry that this overrides proxy data, because those won't reach this
-                // method / are already removed (in the case of username validation)
-                gameProfile.getProperties().put("textures", DEFAULT_TEXTURE_PROPERTY);
-            }
+            // Apply a default texture even for linked players (where we'd have to look up the skin
+            // ourselves) because that's a blocking operation. The real skin is applied later, once
+            // the player has joined (see SpigotListener). This won't override proxy data, because
+            // those won't reach this method / are already removed (in the case of username validation).
+            gameProfile.getProperties().put("textures", DEFAULT_TEXTURE_PROPERTY);
 
             // we have to fake the offline player (login) cycle
 

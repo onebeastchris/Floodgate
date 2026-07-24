@@ -49,18 +49,18 @@ public final class SpigotSkinApplier implements SkinApplier {
     @Inject EventBus eventBus;
 
     @Override
-    public void applySkin(@NonNull Connection connection, @NonNull SkinData skinData) {
-        applySkin0(connection, skinData, true);
+    public void applySkin(@NonNull Connection connection, @NonNull SkinData skinData, boolean internal) {
+        applySkin0(connection, skinData, internal, true);
     }
 
-    private void applySkin0(Connection connection, SkinData skinData, boolean firstTry) {
+    private void applySkin0(Connection connection, SkinData skinData, boolean internal, boolean firstTry) {
         Player player = Bukkit.getPlayer(connection.javaUuid());
 
         // player is probably not logged in yet
         if (player == null) {
             if (firstTry) {
                 versionSpecificMethods.schedule(
-                        () -> applySkin0(connection, skinData, false),
+                        () -> applySkin0(connection, skinData, internal, false),
                         10 * 20
                 );
             }
@@ -78,7 +78,7 @@ public final class SpigotSkinApplier implements SkinApplier {
         SkinData currentSkin = versionSpecificMethods.currentSkin(properties);
 
         SkinApplyEvent event = new SkinApplyEventImpl(connection, currentSkin, skinData);
-        event.cancelled(connection.isLinked());
+        event.cancelled(!internal && connection.isLinked());
 
         eventBus.fire(event);
 

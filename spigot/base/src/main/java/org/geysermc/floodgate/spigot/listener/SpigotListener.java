@@ -30,13 +30,17 @@ import jakarta.inject.Singleton;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.geysermc.api.connection.Connection;
 import org.geysermc.floodgate.core.api.SimpleFloodgateApi;
 import org.geysermc.floodgate.core.connection.ConnectionManager;
 import org.geysermc.floodgate.core.listener.McListener;
 import org.geysermc.floodgate.core.logger.FloodgateLogger;
+import org.geysermc.floodgate.core.skin.SkinApplier;
 import org.geysermc.floodgate.core.util.LanguageManager;
+import org.geysermc.floodgate.core.util.MojangUtils;
 
 @Singleton
 public final class SpigotListener implements Listener, McListener {
@@ -44,6 +48,8 @@ public final class SpigotListener implements Listener, McListener {
     @Inject SimpleFloodgateApi api;
     @Inject LanguageManager languageManager;
     @Inject FloodgateLogger logger;
+    @Inject MojangUtils mojangUtils;
+    @Inject SkinApplier skinApplier;
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
@@ -56,6 +62,28 @@ public final class SpigotListener implements Listener, McListener {
 
         languageManager.loadLocale(connection.languageCode());
         connectionManager.addAcceptedConnection(connection);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Connection connection = api.connectionByUuid(event.getPlayer().getUniqueId());
+        if (connection == null) {
+            return;
+        }
+
+        // Floodgate players are treated as offline-mode players, so for linked players we have to
+        // look up the linked Java account's textures ourselves and apply them. internal = true so
+        // the linked check in the skin applier doesn't cancel it.
+        if (connection.isLinked()) {
+            mojangUtils.skinFor(connection.javaUuid()).whenComplete((skin, exception) -> {
+                if (exception != null) {
+                    logger.debug(
+                            "Unexpected skin fetch error for " + connection.javaUuid(), exception);
+                    return;
+                }
+                skinApplier.applySkin(connection, skin, true);
+            });
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

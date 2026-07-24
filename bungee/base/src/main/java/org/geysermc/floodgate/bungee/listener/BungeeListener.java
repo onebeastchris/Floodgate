@@ -123,7 +123,7 @@ public final class BungeeListener implements Listener, McListener {
 
         // Skin look up (on Spigot and friends) would result in it failing, so apply a default skin
         if (!connection.isLinked()) {
-            skinApplier.applySkin(connection, SkinDataImpl.DEFAULT_SKIN);
+            skinApplier.applySkin(connection, SkinDataImpl.DEFAULT_SKIN, true);
             return;
         }
 
@@ -133,7 +133,7 @@ public final class BungeeListener implements Listener, McListener {
         event.registerIntent(plugin);
 
         mojangUtils.skinFor(connection.javaUuid()).thenAccept(skin -> {
-            skinApplier.applySkin(connection, skin);
+            skinApplier.applySkin(connection, skin, true);
             event.completeIntent(plugin);
         });
     }

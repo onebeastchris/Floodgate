@@ -18,6 +18,7 @@ relocate("org.incendo.cloud")
 relocate("io.leangen.geantyref") // used in cloud
 
 // these dependencies are already present on the platform
-provided(libs.bungee)
+provided(libs.bungee.proxy)
+provided(libs.bungee.api)
 provided(libs.gson)
 provided(libs.snakeyaml)

@@ -4,7 +4,8 @@ plugins {
   id("floodgate.shadow-conventions")
 }
 
-provided(libs.bungee)
+provided(libs.bungee.proxy)
+provided(libs.bungee.api)
 provided(libs.paper.api)
 provided(libs.velocity.api)
 

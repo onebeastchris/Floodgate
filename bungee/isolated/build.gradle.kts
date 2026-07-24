@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     api(projects.isolation)
-    compileOnlyApi(libs.bungee)
+    compileOnlyApi(libs.bungee.proxy)
 }
 
 tasks {

@@ -25,7 +25,8 @@ avaje-jsonb = "2.1"
 expiringmap = "0.5.11"
 
 # bungee
-bungee = "1.20-R0.3-SNAPSHOT"
+bungee-proxy = "1.21-R0.1-SNAPSHOT"
+bungee-api = "1.21-R0.1"
 
 # spigot
 paper = "1.20.2-R0.1-SNAPSHOT"
@@ -89,7 +90,8 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 expiringmap = { module = "net.jodah:expiringmap", version.ref = "expiringmap" }
 
 # bungee
-bungee = { module = "net.md-5:bungeecord-proxy", version.ref = "bungee" }
+bungee-proxy = { module = "net.md-5:bungeecord-proxy", version.ref = "bungee-proxy" }
+bungee-api = { module = "net.md-5:bungeecord-api", version.ref = "bungee-api" }
 cloud-bungee = { module = "org.incendo:cloud-bungee", version.ref = "cloud-platform" }
 
 # spigot

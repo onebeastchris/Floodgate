@@ -29,7 +29,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.lang.reflect.Field;
@@ -110,16 +109,17 @@ public final class SpigotInjector extends Netty4PlatformInjector {
         future.channel().pipeline().addFirst("floodgate-init", new ChannelInboundHandlerAdapter() {
             @Override
             public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-                super.channelRead(ctx, msg);
-
                 Channel channel = (Channel) msg;
-                channel.pipeline().addLast(new ChannelInitializer<Channel>() {
+                channel.pipeline().addLast("floodgate-injector", new ChannelInboundHandlerAdapter() {
                     @Override
-                    protected void initChannel(Channel channel) {
-                        injectAddonsCall(channel, false);
-                        addInjectedClient(channel);
+                    public void channelActive(ChannelHandlerContext childCtx) throws Exception {
+                        injectAddonsCall(childCtx.channel(), false);
+                        addInjectedClient(childCtx.channel());
+                        childCtx.pipeline().remove(this);
+                        super.channelActive(childCtx);
                     }
                 });
+                super.channelRead(ctx, msg);
             }
         });
     }

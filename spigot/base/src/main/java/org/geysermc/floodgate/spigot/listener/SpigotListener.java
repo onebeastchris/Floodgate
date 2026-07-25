@@ -38,6 +38,7 @@ import org.geysermc.floodgate.core.api.SimpleFloodgateApi;
 import org.geysermc.floodgate.core.connection.ConnectionManager;
 import org.geysermc.floodgate.core.listener.McListener;
 import org.geysermc.floodgate.core.logger.FloodgateLogger;
+import org.geysermc.floodgate.core.pluginmessage.channel.FormChannel;
 import org.geysermc.floodgate.core.skin.SkinApplier;
 import org.geysermc.floodgate.core.util.LanguageManager;
 import org.geysermc.floodgate.core.util.MojangUtils;
@@ -50,6 +51,7 @@ public final class SpigotListener implements Listener, McListener {
     @Inject FloodgateLogger logger;
     @Inject MojangUtils mojangUtils;
     @Inject SkinApplier skinApplier;
+    @Inject FormChannel formChannel;
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
@@ -88,6 +90,10 @@ public final class SpigotListener implements Listener, McListener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
+        Connection connection = connectionManager.connectionByPlatformIdentifier(event.getPlayer());
+        if (connection != null) {
+            formChannel.disconnect(connection);
+        }
         connectionManager.removeConnection(event.getPlayer());
     }
 }

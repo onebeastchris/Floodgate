@@ -38,6 +38,7 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
+import org.geysermc.api.GeyserApiBase;
 import org.geysermc.floodgate.core.listener.McListener;
 import org.geysermc.floodgate.core.logger.FloodgateLogger;
 import org.geysermc.floodgate.core.platform.pluginmessage.PluginMessageUtils;
@@ -52,6 +53,7 @@ public final class BungeePluginMessageUtils
         implements Listener, McListener
 {
     @Inject BeanProvider<PluginMessageManager> pluginMessageManager;
+    @Inject GeyserApiBase api;
     @Inject FloodgateLogger logger;
 
     @EventHandler(priority = EventPriority.LOW)
@@ -61,23 +63,26 @@ public final class BungeePluginMessageUtils
             return;
         }
 
-        UUID sourceUuid = null;
-        String sourceUsername = null;
+        org.geysermc.api.connection.Connection fSource = null;
         Identity sourceIdentity = Identity.UNKNOWN;
 
         Connection source = event.getSender();
         if (source instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) source;
-            sourceUuid = player.getUniqueId();
-            sourceUsername = player.getName();
+            fSource = api.connectionByUuid(player.getUniqueId());
             sourceIdentity = Identity.PLAYER;
+
+            if (fSource == null) {
+                logKick(source, "Only Floodgate players can send floodgate messages!");
+                return;
+            }
 
         } else if (source instanceof ServerConnection) {
             sourceIdentity = Identity.SERVER;
         }
 
         Result result = channel.handleProxyCall(
-                event.getData(), sourceUuid, sourceUsername, sourceIdentity
+                event.getData(), fSource, sourceIdentity
         );
 
         event.setCancelled(!result.isAllowed());

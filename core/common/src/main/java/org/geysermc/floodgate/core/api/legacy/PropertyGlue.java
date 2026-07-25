@@ -25,8 +25,9 @@
 
 package org.geysermc.floodgate.core.api.legacy;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.geysermc.floodgate.api.player.PropertyKey;
@@ -99,8 +100,8 @@ public class PropertyGlue {
 
     public <T> T addProperty(PropertyKey key, Object value) {
         if (stringToPropertyKey == null) {
-            stringToPropertyKey = new HashMap<>();
-            propertyKeyToValue = new HashMap<>();
+            stringToPropertyKey = new ConcurrentHashMap<>();
+            propertyKeyToValue = new ConcurrentHashMap<>();
 
             stringToPropertyKey.put(key.getKey(), key);
             propertyKeyToValue.put(key, value);
@@ -124,8 +125,8 @@ public class PropertyGlue {
         PropertyKey propertyKey = new PropertyKey(key, true, true);
 
         if (stringToPropertyKey == null) {
-            stringToPropertyKey = new HashMap<>();
-            propertyKeyToValue = new HashMap<>();
+            stringToPropertyKey = new ConcurrentHashMap<>();
+            propertyKeyToValue = new ConcurrentHashMap<>();
 
             stringToPropertyKey.put(key, propertyKey);
             propertyKeyToValue.put(propertyKey, value);
@@ -144,5 +145,18 @@ public class PropertyGlue {
             propertyKeyToValue.put(propertyKey, value);
             return propertyKey;
         });
+    }
+
+    public <T> T getOrAddProperty(PropertyKey key, Supplier<T> supplier) {
+        if (stringToPropertyKey == null) {
+            stringToPropertyKey = new ConcurrentHashMap<>();
+            propertyKeyToValue = new ConcurrentHashMap<>();
+        }
+
+        // The hashCode & equals of PropertyKey is based on the key string.
+        // stringToPropertyKey is solely for the updatable & removable checks, which we still handle
+        // correctly by using ifAbsent for both.
+        stringToPropertyKey.putIfAbsent(key.getKey(), key);
+        return (T) propertyKeyToValue.computeIfAbsent(key, (unused) -> supplier.get());
     }
 }

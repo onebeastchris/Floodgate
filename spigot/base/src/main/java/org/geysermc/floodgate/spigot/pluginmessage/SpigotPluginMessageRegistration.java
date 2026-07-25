@@ -29,12 +29,16 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
+import org.geysermc.api.GeyserApiBase;
+import org.geysermc.api.connection.Connection;
 import org.geysermc.floodgate.core.pluginmessage.PluginMessageChannel;
+import org.geysermc.floodgate.core.pluginmessage.PluginMessageChannel.Result;
 import org.geysermc.floodgate.core.pluginmessage.PluginMessageRegistration;
 
 @Singleton
 public class SpigotPluginMessageRegistration implements PluginMessageRegistration {
     @Inject JavaPlugin plugin;
+    @Inject GeyserApiBase api;
 
     @Override
     public void register(PluginMessageChannel channel) {
@@ -43,8 +47,18 @@ public class SpigotPluginMessageRegistration implements PluginMessageRegistratio
         messenger.registerIncomingPluginChannel(
                 plugin,
                 channel.getIdentifier(),
-                (channel1, player, message) ->
-                        channel.handleServerCall(message, player.getUniqueId(), player.getName()));
+                (channel1, player, message) -> {
+                    Connection connection = api.connectionByUuid(player.getUniqueId());
+                    if (connection == null) {
+                        player.kickPlayer("Only Floodgate players can send floodgate messages!");
+                        return;
+                    }
+
+                    Result result = channel.handleServerCall(message, connection);
+                    if (!result.isAllowed() && result.getReason() != null) {
+                        player.kickPlayer(result.getReason());
+                    }
+                });
 
         messenger.registerOutgoingPluginChannel(plugin, channel.getIdentifier());
     }

@@ -28,6 +28,7 @@ package org.geysermc.floodgate.core.pluginmessage.channel;
 import jakarta.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import org.geysermc.api.connection.Connection;
 import org.geysermc.floodgate.core.platform.pluginmessage.PluginMessageUtils;
 import org.geysermc.floodgate.core.pluginmessage.PluginMessageChannel;
 
@@ -42,8 +43,7 @@ public class TransferChannel implements PluginMessageChannel {
     @Override
     public Result handleProxyCall(
             byte[] data,
-            UUID sourceUuid,
-            String sourceUsername,
+            Connection source,
             Identity sourceIdentity
     ) {
         if (sourceIdentity == Identity.SERVER) {
@@ -52,14 +52,14 @@ public class TransferChannel implements PluginMessageChannel {
         }
 
         if (sourceIdentity == Identity.PLAYER) {
-            handleServerCall(data, sourceUuid, sourceUsername);
+            handleServerCall(data, source);
         }
 
         return Result.handled();
     }
 
     @Override
-    public Result handleServerCall(byte[] data, UUID playerUuid, String playerUsername) {
+    public Result handleServerCall(byte[] data, Connection source) {
         return Result.kick("I'm sorry, I'm unable to transfer a server :(");
     }
 

@@ -39,6 +39,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
+import org.geysermc.api.GeyserApiBase;
+import org.geysermc.api.connection.Connection;
 import org.geysermc.floodgate.core.listener.McListener;
 import org.geysermc.floodgate.core.logger.FloodgateLogger;
 import org.geysermc.floodgate.core.platform.pluginmessage.PluginMessageUtils;
@@ -50,6 +52,7 @@ import org.geysermc.floodgate.core.pluginmessage.PluginMessageManager;
 @Singleton
 public class VelocityPluginMessageUtils extends PluginMessageUtils implements McListener {
     @Inject BeanProvider<PluginMessageManager> pluginMessageManager;
+    @Inject GeyserApiBase api;
     @Inject ProxyServer proxy;
     @Inject FloodgateLogger logger;
 
@@ -61,23 +64,26 @@ public class VelocityPluginMessageUtils extends PluginMessageUtils implements Mc
             return;
         }
 
-        UUID sourceUuid = null;
-        String sourceUsername = null;
+        Connection fSource = null;
         Identity sourceIdentity = Identity.UNKNOWN;
 
         ChannelMessageSource source = event.getSource();
         if (source instanceof Player) {
             Player player = (Player) source;
-            sourceUuid = player.getUniqueId();
-            sourceUsername = player.getUsername();
+            fSource = api.connectionByUuid(player.getUniqueId());
             sourceIdentity = Identity.PLAYER;
+
+            if (fSource == null) {
+                logKick(source, "Only Floodgate players can send floodgate messages!");
+                return;
+            }
 
         } else if (source instanceof ServerConnection) {
             sourceIdentity = Identity.SERVER;
         }
 
         Result result = channel.handleProxyCall(
-                event.getData(), sourceUuid, sourceUsername, sourceIdentity
+                event.getData(), fSource, sourceIdentity
         );
 
         event.setResult(result.isAllowed() ? ForwardResult.forward() : ForwardResult.handled());

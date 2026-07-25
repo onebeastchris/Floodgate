@@ -26,6 +26,7 @@ import org.geysermc.api.connection.Connection;
 import org.geysermc.floodgate.core.api.SimpleFloodgateApi;
 import org.geysermc.floodgate.core.listener.McListener;
 import org.geysermc.floodgate.core.logger.FloodgateLogger;
+import org.geysermc.floodgate.core.pluginmessage.channel.FormChannel;
 import org.geysermc.floodgate.core.util.Constants;
 import org.geysermc.floodgate.core.util.LanguageManager;
 import org.geysermc.floodgate.core.util.MojangUtils;
@@ -50,6 +51,9 @@ public final class VelocityListener implements McListener {
 
     @Inject
     MojangUtils mojangUtils;
+
+    @Inject
+    FormChannel formChannel;
 
     @Inject
     @Named("connectionAttribute")
@@ -126,6 +130,11 @@ public final class VelocityListener implements McListener {
 
     @Subscribe(order = PostOrder.LAST)
     public void onDisconnect(DisconnectEvent event) {
+        Connection connection =
+                connectionManager.connectionByPlatformIdentifier(event.getPlayer().getUniqueId());
+        if (connection != null) {
+            formChannel.disconnect(connection);
+        }
         connectionManager.removeConnection(event.getPlayer().getUniqueId());
     }
 }

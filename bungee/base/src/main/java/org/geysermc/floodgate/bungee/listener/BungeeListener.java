@@ -29,6 +29,7 @@ import org.geysermc.floodgate.bungee.player.BungeeConnectionManager;
 import org.geysermc.floodgate.core.api.SimpleFloodgateApi;
 import org.geysermc.floodgate.core.config.ProxyFloodgateConfig;
 import org.geysermc.floodgate.core.listener.McListener;
+import org.geysermc.floodgate.core.pluginmessage.channel.FormChannel;
 import org.geysermc.floodgate.core.skin.SkinApplier;
 import org.geysermc.floodgate.core.skin.SkinDataImpl;
 import org.geysermc.floodgate.core.util.Constants;
@@ -65,6 +66,9 @@ public final class BungeeListener implements Listener, McListener {
 
     @Inject
     MojangUtils mojangUtils;
+
+    @Inject
+    FormChannel formChannel;
 
     @Inject
     @Named("kickMessageAttribute")
@@ -140,6 +144,10 @@ public final class BungeeListener implements Listener, McListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
+        Connection connection = connectionManager.connectionByPlatformIdentifier(event.getPlayer());
+        if (connection != null) {
+            formChannel.disconnect(connection);
+        }
         connectionManager.removeConnection(event.getPlayer());
     }
 }

@@ -102,6 +102,14 @@ public interface FloodgateApi {
 
     boolean sendForm(UUID uuid, FormBuilder<?, ?, ?> formBuilder);
 
+    /**
+     * Closes the currently open form (if any) of the given Bedrock player.
+     *
+     * @param uuid the uuid of the Bedrock player to close the form of
+     * @return true if the close request has been sent, false otherwise
+     */
+    boolean closeForm(UUID uuid);
+
     boolean transferPlayer(UUID uuid, String address, int port);
 
     /**

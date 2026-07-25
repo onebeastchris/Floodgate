@@ -37,6 +37,7 @@ import org.geysermc.cumulus.form.util.FormBuilder;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.api.unsafe.Unsafe;
+import org.geysermc.floodgate.core.api.SimpleFloodgateApi;
 import org.geysermc.floodgate.core.connection.FloodgateConnection;
 import org.geysermc.floodgate.core.http.xbox.GetGamertagResult;
 import org.geysermc.floodgate.core.http.xbox.GetXuidResult;
@@ -46,6 +47,7 @@ import org.geysermc.floodgate.core.util.Utils;
 @Singleton
 public final class LegacyApiWrapper implements FloodgateApi {
     @Inject GeyserApiBase apiBase;
+    @Inject SimpleFloodgateApi floodgateApi;
     @Inject XboxClient xboxClient;
 
     @Override
@@ -98,6 +100,11 @@ public final class LegacyApiWrapper implements FloodgateApi {
     @Override
     public boolean sendForm(UUID uuid, FormBuilder<?, ?, ?> formBuilder) {
         return apiBase.sendForm(uuid, formBuilder);
+    }
+
+    @Override
+    public boolean closeForm(UUID uuid) {
+        return floodgateApi.closeForm(uuid);
     }
 
     @Override

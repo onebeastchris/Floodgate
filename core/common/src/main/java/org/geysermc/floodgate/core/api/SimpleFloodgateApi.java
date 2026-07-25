@@ -99,6 +99,10 @@ public class SimpleFloodgateApi implements GeyserApiBase {
         return sendForm(uuid, formBuilder.build());
     }
 
+    public boolean closeForm(@NonNull UUID uuid) {
+        return pluginMessageManager.get().getChannel(FormChannel.class).closeForm(uuid);
+    }
+
     @Override
     public boolean transfer(@NonNull UUID uuid, @NonNull String address, int port) {
         return pluginMessageManager.get()
